@@ -4,7 +4,7 @@
 PROGRAM_NAME="$0"
 FONT_PATH_TO_SAVE_LOCAL="$HOME/.local/share/fonts"
 FONT_PATH_TO_SAVE_GLOBAL='/usr/local/share/fonts'
-DEFAULT_FONT_NAME='JetBrainsMono'
+DEFAULT_FONT_NAME='Hack'
 LOCAL_BIN_DIR="${HOME}/.local/bin"
 GLOBAL_BIN_DIR='/usr/local/bin'
 PRE_REQUISITES=('wget' 'git' 'unzip' 'tar' 'fontconfig')
