@@ -1,0 +1,16 @@
+
+
+# For github jchakir
+Host github-jchakir
+	Identityfile ~/.ssh/id_ed25519-jchakir
+
+
+# for all githubs
+Host github*
+	HostName github.com
+	User git
+	AddKeysToAgent yes
+	IdentitiesOnly yes
+	IdentityFile ~/.ssh/id_ed25519
+
+

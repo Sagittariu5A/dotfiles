@@ -11,7 +11,7 @@ PRE_REQUISITES=('wget' 'git' 'unzip' 'tar' 'fontconfig')
 TO_INSTALL=('fzf' 'font')
 
 
-help () {
+__help () {
   echo 'usage:'
   echo "  $PROGRAM_NAME command"
   echo '  commands:'
@@ -26,7 +26,7 @@ help () {
 }
 
 
-pre_requisites__help () {
+__pre_requisites__help () {
   echo 'usage:'
   echo "  $PROGRAM_NAME $1 option"
   echo '  options:'
@@ -38,7 +38,7 @@ pre_requisites__help () {
 }
 
 pre_requisites () {
-  if [ $# -gt 2 ]; then pre_requisites__help $1 ; fi
+  if [ $# -gt 2 ]; then __pre_requisites__help $1 ; fi
   case $2 in
     l | list)
       echo "Pre-Requisites (on linux): ${PRE_REQUISITES[@]}"
@@ -48,12 +48,12 @@ pre_requisites () {
       exit 0
       ;;
     g | get)   echo ${PRE_REQUISITES[@]} ;;
-    *)         pre_requisites__help $1 ;; 
+    *)         __pre_requisites__help $1 ;; 
   esac
 }
 
 
-install_nerd_font__help () {
+__install_nerd_font__help () {
   echo 'usage:'
   echo "  $PROGRAM_NAME install $1 option1 option2*"
   echo '  option1:'
@@ -65,11 +65,11 @@ install_nerd_font__help () {
 }
 
 install_nerd_font () {
-  if [ $# -gt 3 ]; then install_nerd_font__help $1 ; fi
+  if [ $# -gt 3 ]; then __install_nerd_font__help $1 ; fi
   case $2 in
     l | local)    FONT_PATH_TO_SAVE="$FONT_PATH_TO_SAVE_LOCAL" ;;
     g | global)   FONT_PATH_TO_SAVE="$FONT_PATH_TO_SAVE_GLOBAL" ;;
-    *)            install_nerd_font__help $1 ;; 
+    *)            __install_nerd_font__help $1 ;; 
   esac
   # set Some Variables about Font Name
   FONT_NAME="${3:-${DEFAULT_FONT_NAME}}"
@@ -89,7 +89,7 @@ install_nerd_font () {
 }
 
 
-download_fzf__help () {
+__install_fzf__help () {
   echo 'usage:'
   echo "  $PROGRAM_NAME install $1 option"
   echo '  option:'
@@ -99,12 +99,12 @@ download_fzf__help () {
   exit 0
 }
 
-download_fzf () {
-  if [ $# -ne 2 ]; then download_fzf__help $1 ; fi
+install_fzf () {
+  if [ $# -ne 2 ]; then __install_fzf__help $1 ; fi
   case $2 in
     g | global)     BIN_DIR="$GLOBAL_BIN_DIR" ;;
     l | local)      BIN_DIR="$LOCAL_BIN_DIR" ;;
-    *)              download_fzf__help $1 ;
+    *)              __install_fzf__help $1 ;
   esac
   VER='0.55.0'
   SYS_ARCH='linux_amd64'
@@ -112,7 +112,7 @@ download_fzf () {
   if [ ! -f "${BIN_DIR}/$1" ]; then
     wget -P "$BIN_DIR" "https://github.com/junegunn/fzf/releases/download/v$VER/$FILE_NAME"
     cd "$BIN_DIR" && tar xfz "$FILE_NAME" && rm -rf "$FILE_NAME" && \
-    echo && echo "Remember to add '$BIN_DIR' to PATH env." &&
+    echo && echo "Remember to add '$BIN_DIR' to PATH env." && \
     echo "use: export PATH=\"$BIN_DIR:\$PATH\""
   else
     echo "Skipped: Download $1 to bin folder '$BIN_DIR', $1 already exist on."
@@ -130,7 +130,7 @@ backup () {
 }
 
 
-install__help () {
+__install__help () {
   echo 'usage:'
   echo "  $PROGRAM_NAME $1 option"
   echo '    option : is what to install'
@@ -139,11 +139,11 @@ install__help () {
 }
 
 install () {
-  if [ $# -lt 2 ]; then install__help $1 ; fi
+  if [ $# -lt 2 ]; then __install__help $1 ; fi
   case $2 in
     font)     install_nerd_font ${@:2} ;;
-    fzf)      download_fzf ${@:2} ;;
-    *)        install__help $1 ;;
+    fzf)      install_fzf ${@:2} ;;
+    *)        __install__help $1 ;;
   esac
 }
 
@@ -154,7 +154,7 @@ case "$1" in
   s | setup)              setup ;;
   b | back | bckup)       backup ;;
   p | pre | pre-req)      pre_requisites $@ ;;
-  *)                      help ;;
+  *)                      __help ;;
 esac
 
 
