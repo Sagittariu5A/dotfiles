@@ -20,7 +20,7 @@ declare -A PRE_REQUISITES=(
 	['git']='git'
 	['unzip']='unzip'
 	['tar']='tar'
-	['fc-cache-test']='fontconfig'
+	['fc-cache']='fontconfig'
 )
 
 
