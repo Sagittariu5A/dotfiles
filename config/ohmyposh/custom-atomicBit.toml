@@ -1,5 +1,8 @@
 version = 2
 
+[var]
+  Filler = '<#808080>─</>' 
+
 
 
 [[blocks]]
@@ -10,21 +13,23 @@ version = 2
   [[blocks.segments]]
     type = 'session'
     style = 'plain'
-    template = '╭─[<#55ff55>{{ .UserName }}</><#ff5555>@</><#ffff55>{{ .HostName }}</>]<#808080>─</>'
+    template = '╭─[<#55ff55>{{ .UserName }}</><#ff5555>@</><#ffff55>{{ .HostName }}</>]{{ .Var.Filler }}'
 
   [[blocks.segments]]
     type = 'path'
     style = 'plain'
     template = '<#ffffff>[</><b>{{ .Path }}</b><#ffffff>]</>'
     foreground =  '#6395ee'
-    
+
     [blocks.segments.properties]
       style = 'full'
+      #max_depth = 3
+      #filler = "{{ .Path }}"
 
   [[blocks.segments]]
     type = 'git'
     style = 'plain'
-    template = '<#808080>─</><#ffffff>(</>{{ .HEAD }}{{ if .Staging.Changed }}<#00AA00> ● {{ .Staging.String }}</>{{ end }}{{ if .Working.Changed }}<#D75F00> ● {{ .Working.String }}</>{{ end }}<#ffffff>)</>'
+    template = '{{ .Var.Filler }}<#ffffff>(</>{{ .HEAD }}{{ if .Staging.Changed }}<#00AA00> ● {{ .Staging.String }}</>{{ end }}{{ if .Working.Changed }}<#D75F00> ● {{ .Working.String }}</>{{ end }}<#ffffff>)</>'
     foreground = '#e0f8ff'
 
     [blocks.segments.properties]
@@ -37,12 +42,12 @@ version = 2
 [[blocks]]
   type = 'prompt'
   alignment = 'right'
-  filler = '<#808080>─</>'
+  filler = "<#808080>─</>"
 
   [[blocks.segments]]
     type = 'status'
     style = 'plain'
-    template = '{{ if gt .Code 0 }}{{ .Code }}<#808080>─</>{{ end }}'
+    template = '{{ if gt .Code 0 }}{{ .Code }}{{ .Var.Filler }}{{ end }}'
     foreground = '#FF3333'
 
     [blocks.segments.properties]
@@ -140,7 +145,7 @@ version = 2
   [[blocks.segments]]
     type = 'os'
     style = 'plain'
-    template = '<#ffffff>(</>{{ if .WSL }}WSL at {{ end }}{{.Icon}}<#ffffff> )</><#808080>─</>'
+    template = '<#ffffff>(</>{{ if .WSL }}WSL at {{ end }}{{.Icon}}<#ffffff> )</>{{ .Var.Filler }}'
     foreground = '#ffffff'
 
     [blocks.segments.properties]
@@ -178,7 +183,6 @@ version = 2
 [[blocks]]
   type = 'prompt'
   alignment = 'left'
-  newline = true
 
   [[blocks.segments]]
     type = 'text'
@@ -226,7 +230,7 @@ version = 2
 [secondary_prompt]
   foreground = 'magenta'
   background = 'transparent'
-  template = '{{ if .Root }}<red>#</>{{ else }}<#ffffff>$</>{{ end }}❯❯ '
+  template = ' ❯❯ '
 
 
 
