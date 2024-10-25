@@ -5,7 +5,7 @@
 OHMYPOSH_LOCAL_BIN_DIR="${LOCAL_BIN_DIR:-${HOME}/.local/bin}"
 
 # Pre-requisites
-PRE_REQUISITES+=('curl')
+PRE_REQUISITES['curl']='curl'
 
 
 setup_ohmyposh() {
