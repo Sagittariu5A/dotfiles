@@ -3,6 +3,10 @@ export LOCAL_BIN_DIR="${HOME}/.local/bin"
 # First: add local bin dir to PATH
 [[ "$PATH" =~ "$LOCAL_BIN_DIR" ]] || export PATH="$PATH:$LOCAL_BIN_DIR"
 
+# Set SYS_ZRCH
+function __set_sys_arch () { SYS_ARCH=$(uname -sm | tr '[:upper:]' '[:lower:]' | tr ' ' '_'); }
+[[ -z $SYS_ARCH ]] && __set_sys_arch
+
 # Set the Directory to store zinit and plugins
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
@@ -75,6 +79,13 @@ alias sshjchakir='__connect_ssh_to_jchakir $1 $2'
 alias sshjchak='__connect_ssh_to_jchakir $1 $2'
 alias sshsnowcrash='__connect_ssh_to_snow-crash $1 $2'
 alias sshsnow='__connect_ssh_to_snow-crash $1 $2'
+
+# Aliases
+# This code block is for first time to initialize compinit, can comment it after
+if [[ $SYS_ARCH =~ 'linux_*' ]]; then
+    alias ls='ls --color'
+    alias vim='nvim'
+fi
 
 # Shell integrations
 eval "$(fzf --zsh)" # integrate fzf
