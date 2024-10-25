@@ -16,11 +16,11 @@ GLOBAL_BIN_DIR='/usr/local/bin'
 TO_INSTALL=('fzf' 'font')
 # Pre-Requisites as Map (command -> package)
 declare -A PRE_REQUISITES=(
-	['wget']='wget'
-	['git']='git'
-	['unzip']='unzip'
-	['tar']='tar'
-	['fc-cache']='fontconfig'
+    ['wget']='wget'
+    ['git']='git'
+    ['unzip']='unzip'
+    ['tar']='tar'
+    ['fc-cache']='fontconfig'
 )
 
 
@@ -36,25 +36,25 @@ _info() { printf "$1\n"; }
 
 # this function sets SYS_ARCH variable depends on 'umane -sm' command
 _set_sys_arch() {
-	local output=$(uname -sm)
-	case $output in
-    	*'Linux x86_64'*)    SYS_ARCH='linux_amd64'    ;;
-    	*'Linux i386'*)      SYS_ARCH='linux_i386'     ;;
-    	*'Darwin x86_64'*)   SYS_ARCH='darwin_amd64'   ;;
-    	*'Darwin arm64'*)    SYS_ARCH='darwin_arm64'   ;;
-    	*)					 _error "Error: Unknown System '$output'" ;;
-	esac
+    local output=$(uname -sm)
+    case $output in
+        *'Linux x86_64'*)    SYS_ARCH='linux_amd64'    ;;
+        *'Linux i386'*)      SYS_ARCH='linux_i386'     ;;
+        *'Darwin x86_64'*)   SYS_ARCH='darwin_amd64'   ;;
+        *'Darwin arm64'*)    SYS_ARCH='darwin_arm64'   ;;
+        *)                     _error "Error: Unknown System '$output'" ;;
+    esac
 }
 
 
 # validate pre-requisites
 _validate_pre_requisites() {
-	for requis in ${!PRE_REQUISITES[@]}; do
-		if ! command -v $requis > /dev/null; then
-    	    _error "$requis is required to make setup. Please install '${PRE_REQUISITES[$requis]}' and try again.
-			for more info use: $PROGRAM_NAME pre-req help"
-    	fi
-	done
+    for requis in ${!PRE_REQUISITES[@]}; do
+        if ! command -v $requis > /dev/null; then
+            _error "$requis is required to make setup. Please install '${PRE_REQUISITES[$requis]}' and try again.
+            for more info use: $PROGRAM_NAME pre-req help"
+        fi
+    done
 }
 
 
@@ -78,7 +78,7 @@ __pre_requisites__help () {
     echo "  $PROGRAM_NAME $1 option"
     echo '  options:'
     echo '    h | help       : show this help banner'
-	echo "    l | list       : list all Pre-Requisites and some other instructions"
+    echo "    l | list       : list all Pre-Requisites and some other instructions"
     echo "    g | get        : get all Pre-Requisites to install on"
     echo '    i | install    : install pre-requisites (Comming Soon)'
     exit 0
@@ -112,15 +112,15 @@ __install_nerd_font__help () {
 }
 
 _install_nerd_font () {
-	local font_path=''
-	local font_name="${3:-${DEFAULT_FONT_NAME}}"
+    local font_path=''
+    local font_name="${3:-${DEFAULT_FONT_NAME}}"
     local font_zip="${font_name}.zip"
     local font_exist="${font_name}.exist"
 
-	if [ $# -gt 3 ]; then __install_nerd_font__help $1 ; fi
+    if [ $# -gt 3 ]; then __install_nerd_font__help $1 ; fi
     case $2 in
-        l | local)		font_path=$FONT_PATH_TO_SAVE_LOCAL ;;
-        g | global)		font_path=$FONT_PATH_TO_SAVE_GLOBAL ;;
+        l | local)        font_path=$FONT_PATH_TO_SAVE_LOCAL ;;
+        g | global)        font_path=$FONT_PATH_TO_SAVE_GLOBAL ;;
         *)              __install_nerd_font__help $1 ;; 
     esac
     # check font exist or not then download and unzip
@@ -148,26 +148,26 @@ __install_fzf__help () {
 }
 
 _install_fzf () {
-	local bin_dir=''
+    local bin_dir=''
     local ver='0.55.0'
     local name="fzf-${ver}-${SYS_ARCH}.tar.gz"
-	
-	if [ $# -ne 2 ]; then __install_fzf__help $1 ; fi
+    
+    if [ $# -ne 2 ]; then __install_fzf__help $1 ; fi
     case $2 in
-        g | global)		bin_dir=$GLOBAL_BIN_DIR ;;
-        l | local)		bin_dir=$LOCAL_BIN_DIR ;;
-        *)				__install_fzf__help $1 ;
+        g | global)        bin_dir=$GLOBAL_BIN_DIR ;;
+        l | local)        bin_dir=$LOCAL_BIN_DIR ;;
+        *)                __install_fzf__help $1 ;
     esac
 
     if [ ! -f "${bin_dir}/$1" ]; then
-		wget -nv -P "$bin_dir" "https://github.com/junegunn/fzf/releases/download/v$ver/$name" && \
-		cd "$bin_dir" && tar xfz "$name" && rm -rf "$name" && \
-		[[ ! $PATH =~ $bin_dir ]] && \
-		_warn "'$bin_dir' didn't in PATH, Please remember to add it." && \
-		_info "use: export PATH=\"$bin_dir:\$PATH\""
-	else
-		echo "Skipped: Download $1 to bin folder '$bin_dir', $1 already exist on."
-	fi
+        wget -nv -P "$bin_dir" "https://github.com/junegunn/fzf/releases/download/v$ver/$name" && \
+        cd "$bin_dir" && tar xfz "$name" && rm -rf "$name" && \
+        [[ ! $PATH =~ $bin_dir ]] && \
+        _warn "'$bin_dir' didn't in PATH, Please remember to add it." && \
+        _info "use: export PATH=\"$bin_dir:\$PATH\""
+    else
+        echo "Skipped: Download $1 to bin folder '$bin_dir', $1 already exist on."
+    fi
 }
 
 
@@ -190,12 +190,12 @@ __install__help () {
 }
 
 _install () {
-	_set_sys_arch
-	_validate_pre_requisites
+    _set_sys_arch
+    _validate_pre_requisites
 
     if [ $# -lt 2 ]; then __install__help $1 ; fi
     case $2 in
-		font)     _install_nerd_font ${@:2} ;;
+        font)     _install_nerd_font ${@:2} ;;
         fzf)      _install_fzf ${@:2} ;;
         *)        __install__help $1 ;;
     esac
@@ -203,13 +203,13 @@ _install () {
 
 
 main__make_sh() {
-	case $1 in
-    	i | install)            _install $@ ;;
-	  	s | setup)              _setup ;;
-    	b | back | bckup)       _backup ;;
-	    p | pre | pre-req)      _pre_requisites $@ ;;
-    	*)                      __help ;;
-	esac
+    case $1 in
+        i | install)            _install $@ ;;
+          s | setup)              _setup ;;
+        b | back | bckup)       _backup ;;
+        p | pre | pre-req)      _pre_requisites $@ ;;
+        *)                      __help ;;
+    esac
 }
 
 
