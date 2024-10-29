@@ -1,16 +1,14 @@
 #!/bin/bash
 
-
-# set local bin dir for ohmyposh
-OHMYPOSH_LOCAL_BIN_DIR="${LOCAL_BIN_DIR:-${HOME}/.local/bin}"
-
 # Pre-requisites
 PRE_REQUISITES['curl']='curl'
 
 
-setup_ohmyposh() {
-  BIN_DIR="${1:-$OHMYPOSH_LOCAL_BIN_DIR}"
-  curl -s https://ohmyposh.dev/install.sh | bash -s -- -d "$BIN_DIR"
+# install and setup ohmyposh
+# this function takes bin dir to save on (default: local bin dir)
+_setup_ohmyposh() {
+  local local_bin_dir="${LOCAL_BIN_DIR:-${HOME}/.local/bin}"
+  local bin_dir=${1:-$local_bin_dir}
+  curl -s https://ohmyposh.dev/install.sh | bash -s -- -d "$bin_dir"
 }
-
 
