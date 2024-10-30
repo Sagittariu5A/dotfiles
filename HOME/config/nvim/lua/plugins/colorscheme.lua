@@ -1,6 +1,7 @@
 
 
 return {
+
   -- add OneDark as ColorScheme: https://github.com/navarasu/onedark.nvim
   { 'navarasu/onedark.nvim', },
 
