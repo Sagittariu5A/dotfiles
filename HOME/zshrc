@@ -85,6 +85,8 @@ alias sshsnow='__connect_ssh_to_snow-crash $1 $2'
 if [[ $SYS_ARCH =~ 'linux_*' ]]; then
     alias ls='ls --color'
     alias vim='nvim'
+elif [[ $SYS_ARCH =~ 'darwin_*' ]]; then
+  alias ls='ls -G'
 fi
 
 # Shell integrations
@@ -98,3 +100,4 @@ eval "$(oh-my-posh init zsh --config $HOME/.config/ohmyposh/custom-atomicBit.tom
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
