@@ -2,14 +2,15 @@
 
 return {
 
-  -- add OneDark as ColorScheme: https://github.com/navarasu/onedark.nvim
-  { 'navarasu/onedark.nvim', },
+  -- ColorSchemei:
+  -- { 'navarasu/onedark.nvim', },
+  { "olimorris/onedarkpro.nvim", },
 
-  -- Configure LazyVim to load onedark
+  -- Configure LazyVim to load the ColorScheme:
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "onedark",
+      colorscheme = "onedark_dark",
     },
   },
 }
