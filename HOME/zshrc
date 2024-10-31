@@ -101,3 +101,24 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
+
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+local anaconda3_dir="${HOME}/anaconda3"
+__conda_setup="$('$anaconda3_dir/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "$anaconda3_dir/etc/profile.d/conda.sh" ]; then
+        . "$anaconda3_dir/etc/profile.d/conda.sh"
+    else
+        export PATH="$anaconda3_dir/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+
+# Add Anaconda3 bin dir to PATH
+[[ "$PATH" =~ "$anaconda3_dir/bin" ]] || export PATH="$PATH:$anaconda3_dir/bin"
+# <<< conda initialize <<<
+
