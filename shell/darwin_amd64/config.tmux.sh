@@ -9,7 +9,7 @@
 # Function to Download TMUX or MasOS
 _setup_tmux () {
   if command -v tmux > /dev/null; then
-    mv -f ~/.config/tmux ~/.config/tmux.bak 2> /dev/null && \
+    mv -f ~/.config/tmux ~/.config/tmux.bak 2> /dev/null
     ln -sfn "$(pwd)/HOME/config/tmux" ~/.config/tmux 2> /dev/null
     [[ $? -ne 0 ]] && _error "tmux: Erorr while backup and make symbolic link of 'tmux' config"
   else
