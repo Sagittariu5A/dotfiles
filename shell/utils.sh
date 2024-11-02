@@ -1,11 +1,24 @@
 #!/bin/bash
 
 
-SYS_ARCH=''
-
-
 # Store Script Name to use later
 [[ $0 =~ './' ]] && PROGRAM_NAME=$0 || PROGRAM_NAME="bash $0"
+
+
+SYS_ARCH=''
+# This function sets SYS_ARCH variable depends on 'umane -sm' command
+_set_sys_arch() {
+    local output=$(uname -sm)
+    case $output in
+        *'Linux x86_64'*)    SYS_ARCH='linux_amd64'    ;;
+        # *'Linux i386'*)      SYS_ARCH='linux_i386'     ;;
+        *'Linux i386'*)      _error "Unsupported Linux amd-x86 32-bit"     ;;
+        *'Darwin x86_64'*)   SYS_ARCH='darwin_amd64'   ;;
+        *'Darwin arm64'*)    SYS_ARCH='darwin_arm64'   ;;
+        *)                   _error "Error: Unknown System Architecture '$output'" ;;
+    esac
+}
+_set_sys_arch # Call the function to set SYS_ARCH
 
 
 FONT_PATH_TO_SAVE_LOCAL="$HOME/.local/share/fonts"
@@ -15,7 +28,7 @@ DEFAULT_FONT_NAME='Hack'
 
 LOCAL_BIN_DIR="${HOME}/.local/bin"
 GLOBAL_BIN_DIR='/usr/local/bin'
-BIN_DIR="$LOCAL_BIN_DIR"
+BIN_DIR="${BIN_DIR:-$LOCAL_BIN_DIR}"
 
 
 TO_INSTALL=('fzf' 'font')
@@ -25,9 +38,9 @@ declare -A PRE_REQUISITES=(
     ['git']='git'
     ['unzip']='unzip'
     ['tar']='tar'
-    ['fc-cache']='fontconfig'
 )
 
+[[ $SYS_ARCH == 'linux_amd64' ]] && PRE_REQUISITES['fc-cache']='fontconfig'
 
 
 # Util Functions implementation
@@ -37,19 +50,6 @@ _error() { printf "\e[31m$1\e[0m\n"; exit 1; }
 _warn() { printf "⚠️  \e[33m$1\e[0m\n"; }
 
 _info() { printf "$1\n"; }
-
-# This function sets SYS_ARCH variable depends on 'umane -sm' command
-_set_sys_arch() {
-    local output=$(uname -sm)
-    case $output in
-        *'Linux x86_64'*)    SYS_ARCH='linux_amd64'    ;;
-        *'Linux i386'*)      SYS_ARCH='linux_i386'     ;;
-        *'Darwin x86_64'*)   SYS_ARCH='darwin_amd64'   ;;
-        *'Darwin arm64'*)    SYS_ARCH='darwin_arm64'   ;;
-        *)                     _error "Error: Unknown System Architecture '$output'" ;;
-    esac
-}
-_set_sys_arch # Call the function to set SYS_ARCH
 
 
 __install_nerd_font__help () {
@@ -83,7 +83,8 @@ _install_nerd_font () {
             response_code=$(curl -s -f -L "$font_url" -o "$font_path/$font_zip" -w "%{http_code}")
         fi
         if [ $response_code == '200' ]; then
-            cd "$font_path" && unzip -n "$font_zip"  && rm -rf "$font_path" && fc-cache -fv && touch "$font_exist"
+            cd "$font_path" && unzip -n "$font_zip"  && rm -rf "$font_path" && touch "$font_exist" && \
+            [[ $SYS_ARCH == 'linux_amd64' ]] && fc-cache -fv
         else
             rm -rf "${font_path}/${font_zip}"
             _error "Error while downloading font '$font_name', double check font name (case sensitive),\ncurl response error '$response_error'"
@@ -106,7 +107,7 @@ __install_fzf__help () {
 
 _install_fzf () {
     local bin_dir=''
-    local ver='0.55.0'
+    local ver='0.56.0'
     local name="fzf-${ver}-${SYS_ARCH}.tar.gz"
     local url="https://github.com/junegunn/fzf/releases/download/v$ver/$name"
     local response_code='200'
@@ -135,4 +136,41 @@ _install_fzf () {
     fi
 }
 
+
+__pre_requisites__help () {
+    echo 'usage:'
+    echo "  $PROGRAM_NAME $1 option"
+    echo '  options:'
+    echo '    h | help       : show this help banner'
+    echo "    l | list       : list all Pre-Requisites and some other instructions"
+    echo "    g | get        : get all Pre-Requisites to install on"
+    echo '    i | install    : install pre-requisites (Comming Soon)'
+    exit 0
+}
+
+_pre_requisites () {
+    if [ $# -gt 2 ]; then __pre_requisites__help $1 ; fi
+    case $2 in
+        l | list)
+            echo "Pre-Requisites (on linux): ${PRE_REQUISITES[@]}"
+            echo "to install use: sudo apt install -y \$(bash $PROGRAM_NAME $1 get)"
+            echo '                     ^^^'
+            echo 'remember to use your package manager depends on you linux distro, debian: apt, arch: pacman, ...'
+            exit 0
+            ;;
+        g | get)   echo ${PRE_REQUISITES[@]} ;;
+        *)         __pre_requisites__help $1 ;;
+    esac
+}
+
+
+# validate pre-requisites
+_validate_pre_requisites() {
+    for requis in ${!PRE_REQUISITES[@]}; do
+        if ! command -v $requis > /dev/null; then
+            _error "$requis is required to make setup. Please install '${PRE_REQUISITES[$requis]}' and try again.
+            for more info use: $PROGRAM_NAME pre-req help"
+        fi
+    done
+}
 
