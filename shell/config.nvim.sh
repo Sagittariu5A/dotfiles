@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Include Utils
-source ./utils.sh
+source shell/utils.sh
 
 # Set PRE_REQUISITES
 PRE_REQUISITES['curl'] = 'curl'

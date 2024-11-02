@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Load Util Script
-source ./utils.sh
+source shell/utils.sh
 
 # Pre-requisites
 PRE_REQUISITES['curl']='curl'
