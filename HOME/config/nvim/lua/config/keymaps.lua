@@ -25,6 +25,16 @@ map("i", "<A-Up>", "<esc><cmd>m .-2<cr>==gi", { desc = "Move Selected Text/Line 
 map("v", "<A-Down>", ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", { desc = "Move Selected Text/Line Down" })
 map("v", "<A-Up>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", { desc = "Move Selected Text/Line Up" })
 
--- Keep Selected text in v mode, don't copy the replacement
-map("v", "p", '"_dP', { desc = "Keep Selected text in v mode, don't copy the replacement" })
+-- Keep Selected text in visual mode, don’t copy the replacement
+map("v", "p", '"_dP', { desc = "Keep selected text on paste in visual mode" })
+
+-- Copy with <C-c>, Paste with <C-v>, and Cut with <C-x> in visual mode
+map("v", "<C-c>", '"+y', { desc = "Copy to clipboard" }) -- Copy selection to system clipboard
+map("v", "<C-v>", '"+p', { desc = "Paste from clipboard" }) -- Paste from system clipboard
+map("v", "<C-x>", '"+d', { desc = "Cut to clipboard" }) -- Cut selection to system clipboard
+
+-- Copy with <C-c> and Paste with <C-v> and Cut with <C-x> in normal mode
+map("n", "<C-c>", '"+yy', { desc = "Copy line to clipboard" }) -- Copy current line to system clipboard
+map("n", "<C-v>", '"+p', { desc = "Paste from clipboard" }) -- Paste from system clipboard
+map("n", "<C-x>", '"+dd', { desc = "Cut line to clipboard" }) -- Cut current line to system clipboard
 
