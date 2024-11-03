@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 # Pre-Requisites as Map (command -> package)
 declare -A PRE_REQUISITES=(
   ['curl']='curl'
@@ -9,11 +8,12 @@ declare -A PRE_REQUISITES=(
   ['tar']='tar'
   ['fc-cache']='fontconfig'
 )
-
+# Add to PRE_REQUISITES ($1: key, $2: value)
+_set_prereq() { PRE_REQUISITES[$1]=$2; }
 
 # $1: install font globally or locally (default: local)
 # $2: font name (default: value of DEFAULT_FONT_NAME variable which defaults to "Hack")
-_install_nerd_font () {
+_install_nerd_font() {
   local font_path
   local font_name="${2:-Hack}"
   local font_zip="${font_name}.zip"
@@ -24,8 +24,8 @@ _install_nerd_font () {
 
   # Determine the font installation path
   case $1 in
-    'global')    font_path='/usr/local/share/fonts' ;;
-    *)           font_path="$HOME/.local/share/fonts" ;;
+  'global') font_path='/usr/local/share/fonts' ;;
+  *) font_path="$HOME/.local/share/fonts" ;;
   esac
 
   # Create font path if it doesn't exist
@@ -45,10 +45,10 @@ _install_nerd_font () {
 
   # If download was successful, unzip to the font path
   if [[ "$response_code" == '200' ]]; then
-    unzip -n "$temp_dir/$font_zip" -d "$font_path" && \
-    fc-cache -fv && \
-    touch "${font_path}/${font_exist}" && \
-    _info "Font '$font_name' installed successfully."
+    unzip -n "$temp_dir/$font_zip" -d "$font_path" &&
+      fc-cache -fv &&
+      touch "${font_path}/${font_exist}" &&
+      _info "Font '$font_name' installed successfully."
   else
     rm -rf "$temp_dir"
     _error "Error while downloading font '$font_name'. Check font name (case sensitive). curl response error '$response_code'"
@@ -58,28 +58,26 @@ _install_nerd_font () {
   rm -rf "$temp_dir"
 }
 
-
-_setup_fzf () {
+_setup_fzf() {
   local tmp_dir url latest_version
 
   # Create a temporary directory
   tmp_dir=$(mktemp -d)
 
   # Fetch the latest release URL and version number
-  url=$(curl -s https://api.github.com/repos/junegunn/fzf/releases/latest | \
+  url=$(curl -s https://api.github.com/repos/junegunn/fzf/releases/latest |
     grep -oP '(?<=browser_download_url": ")[^"]*fzf-[0-9.]+-linux_amd64\.tar\.gz')
   latest_version=$(echo "$url" | grep -oP 'fzf-[0-9.]+' | head -1)
 
   # Download, extract, and clean up
-  curl -s -f -L "$url" -o "$tmp_dir/${latest_version}.tar.gz" && \
-  tar -xfz "$tmp_dir/${latest_version}.tar.gz" -C "$tmp_dir" && \
-  mv "$tmp_dir/fzf" "$BIN_DIR" && \
-  rm -rf "$tmp_dir" && \
-  _info "fzf version $latest_version installed."
+  curl -s -f -L "$url" -o "$tmp_dir/${latest_version}.tar.gz" &&
+    tar -xfz "$tmp_dir/${latest_version}.tar.gz" -C "$tmp_dir" &&
+    mv "$tmp_dir/fzf" "$BIN_DIR" &&
+    rm -rf "$tmp_dir" &&
+    _info "fzf version $latest_version installed."
 }
 
-
-__pre_requisites__help () {
+__pre_requisites__help() {
   echo 'usage:'
   echo "  $PROGRAM_NAME $1 option"
   echo '  options:'
@@ -90,29 +88,27 @@ __pre_requisites__help () {
   exit 0
 }
 
-_pre_requisites () {
-  if [ $# -gt 2 ]; then __pre_requisites__help $1 ; fi
+_pre_requisites() {
+  if [ $# -gt 2 ]; then __pre_requisites__help $1; fi
   case $2 in
-    l | list)
-      echo "Pre-Requisites (on linux): ${PRE_REQUISITES[@]}"
-      echo "to install use: sudo apt install -y \$(bash $PROGRAM_NAME $1 get)"
-      echo '                     ^^^'
-      echo 'remember to use your package manager depends on you linux distro, debian: apt, arch: pacman, ...'
-      exit 0
-      ;;
-    g | get)   echo -n ${PRE_REQUISITES[@]} ;;
-    *)         __pre_requisites__help $1 ;;
+  l | list)
+    echo "Pre-Requisites (on linux): ${PRE_REQUISITES[@]}"
+    echo "to install use: sudo apt install -y \$(bash $PROGRAM_NAME $1 get)"
+    echo '                     ^^^'
+    echo 'remember to use your package manager depends on you linux distro, debian: apt, arch: pacman, ...'
+    exit 0
+    ;;
+  g | get) echo -n ${PRE_REQUISITES[@]} ;;
+  *) __pre_requisites__help $1 ;;
   esac
 }
-
 
 # validate pre-requisites
 _validate_pre_requisites() {
   for requis in ${!PRE_REQUISITES[@]}; do
-    if ! command -v $requis > /dev/null; then
+    if ! command -v $requis >/dev/null; then
       _error "$requis is required to make setup. Please install '${PRE_REQUISITES[$requis]}' and try again.
       for more info use: $PROGRAM_NAME pre-req help"
     fi
   done
 }
-

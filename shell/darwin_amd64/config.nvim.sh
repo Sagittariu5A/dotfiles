@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 # Set PRE_REQUISITES
 # PRE_REQUISITES['curl'] = 'curl'
 # PRE_REQUISITES['tar']  = 'tar'
@@ -8,7 +7,7 @@ _set_prereq 'curl' 'curl'
 _set_prereq 'curl' 'curl'
 
 # Function to Download NVIM for either macOS or Linux
-_setup_nvim () {
+_setup_nvim() {
   local url="https://github.com/neovim/neovim/releases/latest/download/nvim-macos-x86_64.tar.gz"
   local tmp_dir="$(mktemp -d)"
   local tmp_out_dir="$tmp_dir/nvim-macos-x86_64"
@@ -26,7 +25,7 @@ _setup_nvim () {
   fi
 
   # Move the extracted directories to the bin_dir
-  if ! cp -r "$tmp_out_dir/bin" "$tmp_out_dir/lib" "$tmp_out_dir/share" "$BIN_DIR/../" 2> /dev/null; then
+  if ! cp -r "$tmp_out_dir/bin" "$tmp_out_dir/lib" "$tmp_out_dir/share" "$BIN_DIR/../" 2>/dev/null; then
     rm -rf "$tmp_dir"
     _error "nvim: Error moving extracted files to $BIN_DIR/../"
   fi
@@ -35,13 +34,12 @@ _setup_nvim () {
   rm -rf "$tmp_dir"
 
   # Create a symbolic link for nvim configuration
-  mv -f ~/.config/nvim  ~/.config/nvim.bak 2> /dev/null
-  ln -sfn "$(pwd)/HOME/config/nvim" ~/.config/nvim 2> /dev/null
+  mv -f ~/.config/nvim ~/.config/nvim.bak 2>/dev/null
+  ln -sfn "$(pwd)/HOME/config/nvim" ~/.config/nvim 2>/dev/null
   if [ $? -ne 0 ]; then
-    mv -f ~/.config/nvim.bak  ~/.config/nvim 2> /dev/null
+    mv -f ~/.config/nvim.bak ~/.config/nvim 2>/dev/null
     _error "nvim: Error while making buckup or creating symlink for nvim configuration"
   fi
 
   _info "nvim installed successfully."
 }
-
