@@ -2,7 +2,6 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
-
 local map = vim.keymap.set
 
 -- Resize window using <Shift> arrow keys
@@ -37,4 +36,3 @@ map("v", "<C-x>", '"+d', { desc = "Cut to clipboard" }) -- Cut selection to syst
 map("n", "<C-c>", '"+yy', { desc = "Copy line to clipboard" }) -- Copy current line to system clipboard
 map("n", "<C-v>", '"+p', { desc = "Paste from clipboard" }) -- Paste from system clipboard
 map("n", "<C-x>", '"+dd', { desc = "Cut line to clipboard" }) -- Cut current line to system clipboard
-
