@@ -35,7 +35,10 @@ _setup_nvim () {
   # Create a symbolic link for nvim configuration
   mv -f ~/.config/nvim  ~/.config/nvim.bak 2> /dev/null
   ln -sfn "$(pwd)/HOME/config/nvim" ~/.config/nvim 2> /dev/null
-  [[ $? -ne 0 ]] && _error "nvim: Error while making buckup or creating symlink for nvim configuration"
+  if [ $? -ne 0 ]; then
+    mv -f ~/.config/nvim.bak  ~/.config/nvim 2> /dev/null
+    _error "nvim: Error while making buckup or creating symlink for nvim configuration"
+  fi
 
   _info "nvim installed successfully."
 }
