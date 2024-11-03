@@ -18,7 +18,7 @@ _install_nerd_font () {
   local font_name="${2:-Hack}"
   local font_zip="${font_name}.zip"
   local font_exist="${font_name}.exist"
-  local font_url="https://github.com/ryanoasis/nerd-fonts/releases/download/latest/$font_zip"
+  local font_url="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/$font_zip"
   local temp_dir
   local response_code
 

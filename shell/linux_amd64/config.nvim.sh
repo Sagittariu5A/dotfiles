@@ -24,7 +24,7 @@ _setup_nvim () {
   fi
 
   # Move the extracted directories to the bin_dir
-  if ! mv -f "$tmp_out_dir/bin" "$tmp_out_dir/lib" "$tmp_out_dir/share" "$BIN_DIR/../" 2> /dev/null; then
+  if ! cp -r "$tmp_out_dir/bin" "$tmp_out_dir/lib" "$tmp_out_dir/share" "$BIN_DIR/../" 2> /dev/null; then
     rm -rf "$tmp_dir"
     _error "nvim: Error moving extracted files to $BIN_DIR/../"
   fi
