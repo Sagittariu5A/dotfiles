@@ -117,20 +117,14 @@ _install_nerd_font() {
   rm -rf "$temp_dir"
 }
 
-_setup_fzf() {
-  local tmp_dir url latest_version
-
+_install_fzf() {
   # Create a temporary directory
-  tmp_dir=$(mktemp -d)
-
-  # Fetch the latest release URL and version number
-  url=$(curl -s https://api.github.com/repos/junegunn/fzf/releases/latest |
-    grep -oP '(?<=browser_download_url": ")[^"]*fzf-[0-9.]+-darwin_amd64\.tar\.gz')
-  latest_version=$(echo "$url" | grep -oP 'fzf-[0-9.]+' | head -1)
+  local tmp_dir=$(mktemp -d)
+  local url = "https://github.com/junegunn/fzf/releases/latest/download/fzf-0.56.0-darwin_amd64.tar.gz"
 
   # Download, extract, and clean up
-  curl -s -f -L "$url" -o "$tmp_dir/${latest_version}.tar.gz" &&
-    tar -xfz "$tmp_dir/${latest_version}.tar.gz" -C "$tmp_dir" &&
+  curl -s -f -L "$url" -o "$tmp_dir/fzf.tar.gz" &&
+    tar xfz "$tmp_dir/fzf.tar.gz" -C "$tmp_dir" &&
     mv "$tmp_dir/fzf" "$BIN_DIR" &&
     rm -rf "$tmp_dir" &&
     _info "fzf version $latest_version installed."

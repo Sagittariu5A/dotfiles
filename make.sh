@@ -26,6 +26,7 @@ _setup() {
     nvim) _setup_nvim ;;
     tmux) _setup_tmux ;;
     ohmyposh) _setup_ohmyposh ;;
+    zsh) _setup_zshrc ;;
     *) _warn "Unknown Setup '$setup'" ;;
     esac
   done
