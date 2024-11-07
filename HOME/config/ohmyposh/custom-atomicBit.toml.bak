@@ -1,0 +1,236 @@
+version = 2
+
+[var]
+  Filler = '<#808080>─</>' 
+
+
+
+[[blocks]]
+  type = 'prompt'
+  alignment = 'left'
+  newline = true
+
+  [[blocks.segments]]
+    type = 'session'
+    style = 'plain'
+    template = '╭─[<#55ff55>{{ .UserName }}</><#ff5555>@</><#ffff55>{{ .HostName }}</>]{{ .Var.Filler }}'
+
+  [[blocks.segments]]
+    type = 'path'
+    style = 'plain'
+    template = '<#ffffff>[</><b>{{ .Path }}</b><#ffffff>]</>'
+    foreground =  '#6395ee'
+
+    [blocks.segments.properties]
+      style = 'full'
+      #max_depth = 3
+      #filler = "{{ .Path }}"
+
+  [[blocks.segments]]
+    type = 'git'
+    style = 'plain'
+    template = '{{ .Var.Filler }}<#ffffff>(</>{{ .HEAD }}{{ if .Staging.Changed }}<#00AA00> ● {{ .Staging.String }}</>{{ end }}{{ if .Working.Changed }}<#D75F00> ● {{ .Working.String }}</>{{ end }}<#ffffff>)</>'
+    foreground = '#e0f8ff'
+
+    [blocks.segments.properties]
+      branch_icon = ' '
+      fetch_status = true
+      fetch_upstream_icon = true
+
+
+
+[[blocks]]
+  type = 'prompt'
+  alignment = 'right'
+  filler = "<#808080>─</>"
+
+  [[blocks.segments]]
+    type = 'status'
+    style = 'plain'
+    template = '{{ if gt .Code 0 }}{{ .Code }}{{ .Var.Filler }}{{ end }}'
+    foreground = '#FF3333'
+
+    [blocks.segments.properties]
+      always_enabled = true
+
+  [[blocks.segments]]
+    type = 'node'
+    style = 'plain'
+    template = '<#ffffff>(</>{{ if .PackageManagerIcon }}{{ .PackageManagerIcon }} {{ end }}{{ .Full }}<#ffffff>)</>'
+    foreground = '#3C873A'
+
+    [blocks.segments.properties]
+      fetch_package_manager = true
+      npm_icon = ' <#cc3a3a> </> '
+      yarn_icon = ' <#348cba> </>'
+
+  [[blocks.segments]]
+    type = 'python'
+    style = 'plain'
+    template = '<#ffffff>(</>{{ if .Error }}{{ .Error }}{{ else }}{{ if .Venv }}{{ .Venv }} {{ end }}{{ .Full }}{{ end }}<#ffffff>)</>'
+    foreground = '#FFE873'
+
+  [[blocks.segments]]
+    type = 'java'
+    style = 'plain'
+    template = '<#ffffff>(</>{{ if .Error }}{{ .Error }}{{ else }}{{ .Full }}{{ end }}<#ffffff>)</>'
+    foreground = '#ec2729'
+
+  [[blocks.segments]]
+    type = 'dotnet'
+    style = 'plain'
+    template = '<#ffffff>(</>{{ if .Unsupported }} {{ else }}{{ .Full }}{{ end }}<#ffffff>)</>'
+    foreground = '#0d6da8'
+
+  [[blocks.segments]]
+    type = 'go'
+    style = 'plain'
+    template = '<#ffffff>(</>{{ if .Error }}{{ .Error }}{{ else }}{{ .Full }}{{ end }}<#ffffff>)</>'
+    foreground = '#06aad5'
+
+  [[blocks.segments]]
+    type = 'rust'
+    style = 'plain'
+    template = '<#ffffff>(</>{{ if .Error }}{{ .Error }}{{ else }}{{ .Full }}{{ end }}<#ffffff>)</>'
+    foreground = '#925837'
+
+  [[blocks.segments]]
+    type = 'dart'
+    style = 'plain'
+    template = '<#ffffff>(</>{{ if .Error }}{{ .Error }}{{ else }}{{ .Full }}{{ end }}<#ffffff>)</>'
+    foreground = '#055b9c'
+
+  [[blocks.segments]]
+    type = 'angular'
+    style = 'plain'
+    template = '<#ffffff>(</>{{ if .Error }}{{ .Error }}{{ else }}{{ .Full }}{{ end }}<#ffffff>)</>'
+    foreground = '#ce092f'
+
+  [[blocks.segments]]
+    type = 'nx'
+    style = 'plain'
+    template = '<#1e293b>(</>{{ if .Error }}{{ .Error }}{{ else }}Nx {{ .Full }}{{ end }}<#1e293b>)</>'
+    foreground = '#ffffff'
+
+  [[blocks.segments]]
+    type = 'julia'
+    style = 'plain'
+    template = '<#ffffff>(</>{{ if .Error }}{{ .Error }}{{ else }}{{ .Full }}{{ end }}<#ffffff>)</>'
+    foreground = '#359a25'
+
+  [[blocks.segments]]
+    type = 'ruby'
+    style = 'plain'
+    template = '<#ffffff>(</>{{ if .Error }}{{ .Error }}{{ else }}{{ .Full }}{{ end }}<#ffffff>)</>'
+    foreground = '#9c1006'
+
+  [[blocks.segments]]
+    type = 'azfunc'
+    style = 'plain'
+    template = '<#ffffff>(</>{{ if .Error }}{{ .Error }}{{ else }}{{ .Full }}{{ end }}<#ffffff>)</>'
+    foreground = '#5398c2'
+
+  [[blocks.segments]]
+    type = 'aws'
+    style = 'plain'
+    template = '<#ffffff>(</>{{.Profile}}{{if .Region}}@{{.Region}}{{end}}<#ffffff>)</>'
+    foreground = '#faa029'
+
+  [[blocks.segments]]
+    type = 'kubectl'
+    style = 'plain'
+    template = '<#ffffff>(</>{{.Context}}{{if .Namespace}} :: {{.Namespace}}{{end}}<#ffffff>)</>'
+    foreground = '#316ce4'
+
+  [[blocks.segments]]
+    type = 'os'
+    style = 'plain'
+    template = '<#ffffff>(</>{{ if .WSL }}WSL at {{ end }}{{.Icon}}<#ffffff> )</>{{ .Var.Filler }}'
+    foreground = '#ffffff'
+
+    [blocks.segments.properties]
+      linux = '<#ffffff> </>'
+      macos = '<#ffffff> </>'
+      windows = '<#ffffff> </>'
+
+  [[blocks.segments]]
+    type = 'battery'
+    style = 'plain'
+    foreground_templates = [
+      '{{if eq "Charging" .State.String}}#40c4ff{{end}}',
+      '{{if eq "Discharging" .State.String}}#FFFB38{{end}}',
+      '{{if eq "Full" .State.String}}#33DD2D{{end}}'
+    ]
+    template = '<#ffffff>[</>{{ if not .Error }}{{ .Icon }}{{ .Percentage }}{{ end }}{{ .Error }}%<#ffffff>]─</>'
+    foreground = '#ffffff'
+
+    [blocks.segments.properties]
+      charged_icon = ' '
+      charging_icon = ' '
+      discharging_icon = ' '
+
+  [[blocks.segments]]
+    type = 'time'
+    style = 'plain'
+    template = '<#ffffff>[</> {{ .CurrentDate | date .Format }}<#ffffff>]</>'
+    foreground = '#55ffff'
+
+    [blocks.segments.properties]
+      time_format = '_2,15:04'
+
+
+
+[[blocks]]
+  type = 'prompt'
+  alignment = 'left'
+
+  [[blocks.segments]]
+    type = 'text'
+    style = 'plain'
+    template = '╰─➤'
+
+  [[blocks.segments]]
+    type = 'status'
+    style = 'plain'
+    foreground_templates = ['{{ if .Root }}#FF9248{{ end }}', '{{ if gt .Code 0 }}#ef5350{{ end }}']
+    template = '{{ if .Root }}# {{ else }}$ {{ end }}'
+    foreground = '#ecf7fa'
+
+    [blocks.segments.properties]
+      always_enabled = true
+
+
+
+[[blocks]]
+  type = 'rprompt'
+  overflow = 'hidden'
+
+  [[blocks.segments]]
+    type = 'executiontime'
+    style = 'plain'
+    foreground = 'yellow'
+    background = 'transparent'
+    template = '{{ .FormattedMs }}  '
+
+    [blocks.segments.properties]
+      threshold = 3000
+      style = 'austin'
+
+
+
+[transient_prompt]
+  foreground_templates = ["{{if gt .Code 0 }}red{{end}}", "{{if eq .Code 0 }}magenta{{end}}"]
+  background = 'transparent'
+  foreground = '#ffffff'
+  template = ' ❯ '
+  newline = true
+
+
+
+[secondary_prompt]
+  foreground = 'magenta'
+  background = 'transparent'
+  template = ' ❯❯ '
+
+
+
