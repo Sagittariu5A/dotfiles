@@ -30,7 +30,10 @@ require("lazy").setup({
 		version = false, -- always use the latest git commit
 		-- version = "*", -- try installing the latest stable version for plugins that support semver
 	},
-	install = { colorscheme = { "onedark_dark" } }, -- Define Your Color Scheme Here
+	-- Define Your Color Scheme Here
+	-- install = { colorscheme = { "onedark_dark" } },
+	install = { colorscheme = { "monokai" } },
+	-- install = { colorscheme = { "monokai-nightasty" } },
 	checker = {
 		enabled = true, -- check for plugin updates periodically
 		notify = false, -- notify on update

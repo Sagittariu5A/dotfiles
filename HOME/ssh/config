@@ -1,5 +1,4 @@
 
-
 # For github jchakir
 Host github-jchakir
 	Identityfile ~/.ssh/id_ed25519-github-jchakir
@@ -12,10 +11,14 @@ Host github*
 	IdentityFile ~/.ssh/id_ed25519-github
 
 
+# For jchakir.com vps
+Host *jchakir.com
+	ForwardX11 yes
+
+
 # for all githubs
 Host *
 	AddKeysToAgent yes
 	IdentitiesOnly yes
 	IdentityFile ~/.ssh/id_ed25519
-	ForwardX11 yes
 
