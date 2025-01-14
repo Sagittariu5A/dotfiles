@@ -31,9 +31,7 @@ require("lazy").setup({
 		-- version = "*", -- try installing the latest stable version for plugins that support semver
 	},
 	-- Define Your Color Scheme Here
-	-- install = { colorscheme = { "onedark_dark" } },
-	install = { colorscheme = { "monokai" } },
-	-- install = { colorscheme = { "monokai-nightasty" } },
+	install = { colorscheme = { "starry" } },
 	checker = {
 		enabled = true, -- check for plugin updates periodically
 		notify = false, -- notify on update
