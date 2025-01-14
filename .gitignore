@@ -2,4 +2,6 @@
 # ignore vim hidden files
 **/.*.swp
 
+HOME/config/nvim/lazy-lock.json
+HOME/config/nvim/lazyvim.json
 
