@@ -4,38 +4,77 @@ _set_prereq 'tar' 'tar'
 
 # Function to Download NVIM for either macOS or Linux
 _setup_nvim() {
-  local url="https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz"
+  local url="https://github.com/neovim/neovim/releases/download/nightly/nvim-linux-x86_64.tar.gz"
   local tmp_dir="$(mktemp -d)"
   local tmp_out_dir="$tmp_dir/nvim-linux64"
+  local dest_dir="$BIN_DIR/.."
+  local src_dirs=("bin" "lib" "share")
 
   # Download NVIM
   if ! curl -s -f -L "$url" -o "$tmp_dir/nvim.tar.gz"; then
     rm -rf "$tmp_dir"
-    _error "nvim: Error downloading"
+    _error "nvim: Download failed - check network or URL"
   fi
 
   # Extract the downloaded tarball
   if ! tar -xzf "$tmp_dir/nvim.tar.gz" -C "$tmp_dir"; then
     rm -rf "$tmp_dir"
-    _error "nvim: Error extracting 'nvim.tar.gz'"
+    _error "nvim: Extraction failed - corrupt archive?"
   fi
 
-  # Move the extracted directories to the bin_dir
-  if ! cp -r "$tmp_out_dir/bin" "$tmp_out_dir/lib" "$tmp_out_dir/share" "$BIN_DIR/../" 2>/dev/null; then
+  # --- Enhanced copy operation ---
+  # Verify source directories exist
+  for dir in "${src_dirs[@]}"; do
+    if [[ ! -d "$tmp_out_dir/$dir" ]]; then
+      rm -rf "$tmp_dir"
+      _error "nvim: Missing extracted directory '$tmp_out_dir/$dir'"
+    fi
+  done
+
+  # Verify destination permissions
+  if [[ ! -d "$dest_dir" ]]; then
     rm -rf "$tmp_dir"
-    _error "nvim: Error moving extracted files to $BIN_DIR/../"
+    _error "nvim: Destination '$dest_dir' does not exist"
+  elif [[ ! -w "$dest_dir" ]]; then
+    rm -rf "$tmp_dir"
+    _error "nvim: No write permissions in '$dest_dir'"
   fi
+
+  # Perform copy with error visibility
+  if ! cp -fr "${src_dirs[@]/#/$tmp_out_dir/}" "$dest_dir"; then
+    rm -rf "$tmp_dir"
+    _error "nvim: Copy failed - check disk space or permissions"
+  fi
+  # --- End enhanced copy ---
 
   # Clean up temporary directory
   rm -rf "$tmp_dir"
 
-  # Create a symbolic link for nvim configuration
-  mv -f ~/.config/nvim ~/.config/nvim.bak 2>/dev/null
-  ln -sfn "$(pwd)/HOME/config/nvim" ~/.config/nvim 2>/dev/null
-  if [ $? -ne 0 ]; then
-    mv -f ~/.config/nvim.bak ~/.config/nvim 2>/dev/null
-    _error "nvim: Error while making buckup or creating symlink for nvim configuration"
+  # Enhanced symlink handling
+  local nvim_config_src="$(pwd)/HOME/config/nvim"
+  local nvim_config_dest="$HOME/.config/nvim"
+
+  # Verify source config exists
+  if [[ ! -d "$nvim_config_src" ]]; then
+    _error "nvim: Config source '$nvim_config_src' not found"
+    return 1
   fi
 
-  _info "nvim installed successfully."
+  # Create backup only if config exists
+  if [[ -d "$nvim_config_dest" ]]; then
+    mv -f "$nvim_config_dest" "${nvim_config_dest}.bak" || {
+      _error "nvim: Failed to create backup"
+      return 1
+    }
+  fi
+
+  # Create symlink with validation
+  if ln -sfn "$nvim_config_src" "$nvim_config_dest"; then
+    _info "Created nvim config symlink: $nvim_config_dest → $nvim_config_src"
+  else
+    [[ -d "${nvim_config_dest}.bak" ]] && mv -f "${nvim_config_dest}.bak" "$nvim_config_dest"
+    _error "nvim: Symlink creation failed - check permissions"
+  fi
+
+  _info "nvim: Installation completed successfully"
 }
