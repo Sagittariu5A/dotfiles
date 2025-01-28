@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Pre-Requisites as Map (command -> package)
 declare -A PRE_REQUISITES=(
   ['curl']='curl'

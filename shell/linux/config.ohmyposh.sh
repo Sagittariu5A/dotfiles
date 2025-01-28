@@ -1,8 +1,5 @@
-#!/bin/bash
-
 # Pre-requisites
-# PRE_REQUISITES['curl']='curl'
-_set_prereq 'curl' 'curl'
+PRE_REQUISITES['curl']='curl'
 
 # install and setup ohmyposh
 _setup_ohmyposh() {

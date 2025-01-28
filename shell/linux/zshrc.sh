@@ -1,5 +1,3 @@
-#!/bin/bash
-
 _setup_zshrc() {
   mv -f ~/.zshrc ~/.zshrc.bak
   ln -sfn "$(pwd)/HOME/zshrc" ~/.zshrc

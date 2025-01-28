@@ -1,16 +1,12 @@
-#!/bin/bash
-
 # Set PRE_REQUISITES
-# PRE_REQUISITES['curl'] = 'curl'
-# PRE_REQUISITES['tar']  = 'tar'
 _set_prereq 'curl' 'curl'
-_set_prereq 'curl' 'curl'
+_set_prereq 'tar' 'tar'
 
 # Function to Download NVIM for either macOS or Linux
 _setup_nvim() {
-  local url="https://github.com/neovim/neovim/releases/latest/download/nvim-macos-x86_64.tar.gz"
+  local url="https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz"
   local tmp_dir="$(mktemp -d)"
-  local tmp_out_dir="$tmp_dir/nvim-macos-x86_64"
+  local tmp_out_dir="$tmp_dir/nvim-linux64"
 
   # Download NVIM
   if ! curl -s -f -L "$url" -o "$tmp_dir/nvim.tar.gz"; then

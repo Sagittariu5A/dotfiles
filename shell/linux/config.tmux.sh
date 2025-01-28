@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Set PRE_REQUISITES
 _set_prereq 'curl' 'curl'
 

@@ -2,7 +2,7 @@
 
 # Start Source Scripts
 source shell/utils.sh # Shall loaded first
-source "shell/${SYS_ARCH}/init.sh"
+source "shell/linux/init.sh"
 
 __help() {
   echo 'usage:'

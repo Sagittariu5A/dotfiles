@@ -69,19 +69,6 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 zstyle ':completion:*' list-colors  "${(s.:.)LS_COLORS}"
 zstyle ':completion:*' menu no
 
-# SSH functions
-function __connect_ssh_to_jchakir () {
-  ssh -p ${2:-22} ${1:-$USER}@jchakir.com
-}
-function __connect_ssh_to_snow-crash () {
-  ssh -p ${2:-4242} "level${1:-00}@jchakir.com"
-}
-alias sshjchakir='__connect_ssh_to_jchakir $1 $2'
-alias sshjchak='__connect_ssh_to_jchakir $1 $2'
-alias sshsnowcrash='__connect_ssh_to_snow-crash $1 $2'
-alias sshsnow='__connect_ssh_to_snow-crash $1 $2'
-
-# Aliases
 # This code block is for first time to initialize compinit, can comment it after
 if [[ $SYS_ARCH =~ 'linux_*' ]]; then
     alias ls='ls --color'

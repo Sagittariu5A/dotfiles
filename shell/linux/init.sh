@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Include linux_amd64 scripts
 source shell/linux_amd64/utils.sh # shall loaded first
 source shell/linux_amd64/config.nvim.sh
