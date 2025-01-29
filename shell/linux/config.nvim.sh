@@ -6,8 +6,8 @@ _set_prereq 'tar' 'tar'
 _setup_nvim() {
   local url="https://github.com/neovim/neovim/releases/download/nightly/nvim-linux-x86_64.tar.gz"
   local tmp_dir="$(mktemp -d)"
-  local tmp_out_dir="$tmp_dir/nvim-linux64"
-  local dest_dir="$BIN_DIR/.."
+  local tmp_out_dir="$tmp_dir/nvim-linux-x86_64"
+  local dest_dir="$(dirname -z $BIN_DIR)"
   local src_dirs=("bin" "lib" "share")
 
   # Download NVIM
