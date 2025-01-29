@@ -4,7 +4,7 @@ declare -A PRE_REQUISITES=(
   ['git']='git'
   ['unzip']='unzip'
   ['tar']='tar'
-  ['fc-cache']='fontconfig'
+  # ['fc-cache']='fontconfig'
 )
 # Add to PRE_REQUISITES ($1: key, $2: value)
 _set_prereq() { PRE_REQUISITES[$1]=$2; }
