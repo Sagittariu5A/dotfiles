@@ -3,6 +3,10 @@ export LOCAL_BIN_DIR="${HOME}/.local/bin"
 # First: add local bin dir to PATH
 [[ "$PATH" =~ "$LOCAL_BIN_DIR" ]] || export PATH="$PATH:$LOCAL_BIN_DIR"
 
+# Add Golang Path to PATH
+[[ "$PATH" =~ "/usr/local/go/bin" ]] || export PATH="$PATH:/usr/local/go/bin"
+[[ "$PATH" =~ "$HOME/go/bin" ]] || export PATH="$PATH:$HOME/go/bin"
+
 # Set SYS_ZRCH
 function __set_sys_arch () { SYS_ARCH=$(uname -sm | tr '[:upper:]' '[:lower:]' | tr ' ' '_'); }
 [[ -z $SYS_ARCH ]] && __set_sys_arch
@@ -73,7 +77,9 @@ zstyle ':completion:*' menu no
 # This code block is for first time to initialize compinit, can comment it after
 if [[ $SYS_ARCH =~ 'linux_*' ]]; then
     alias ls='ls --color'
-    alias vim='nvim'
+    if command -v nvim >/dev/null 2>&1; then
+      alias vim='nvim'
+    fi
 elif [[ $SYS_ARCH =~ 'darwin_*' ]]; then
   alias ls='ls -G'
 fi
@@ -98,6 +104,12 @@ if command -v uvx >/dev/null 2>&1; then
   eval "$(uvx --generate-shell-completion zsh)"
 fi
 
+# Load zoxide and set cd = z as alias
+if command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init zsh)"
+  alias cd=z
+fi
+
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
@@ -118,3 +130,18 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
+
+# pnpm
+export PNPM_HOME="/home/jaw/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
+# bun completions
+[ -s "/home/jaw/.bun/_bun" ] && source "/home/jaw/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
