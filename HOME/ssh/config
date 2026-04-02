@@ -2,26 +2,14 @@
 # For github Sagittariu5A
 Host github-sag
 	Identityfile ~/.ssh/id_ed25519-github-sag
-
+	User git
+	HostName github.com
 
 # for all githubs (jchakir, ...)
-Host github*
+Host github.com
 	HostName github.com
 	User git
 	IdentityFile ~/.ssh/id_ed25519-github
-
-# For sgrsa.com vps
-Host *sgrsa.com
-	ForwardX11 yes
-
-# For jchakir.com vps
-Host *jchakir.com
-	ForwardX11 yes
-
-# for diptyx vps
-Host diptyx.com *.diptyx.com
-    SendEnv -
-    SetEnv TERM=xterm-256color
 
 # for all githubs
 Host *
