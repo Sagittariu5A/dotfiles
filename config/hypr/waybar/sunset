@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+## Copyright (C) 2020-2026 Aditya Shakya <adi1090x@gmail.com>
+##
+## Script for hyprsunset modes ------------------------------
+
+# Vars
+DIR="$HOME/.config/hypr"
+STATE_FILE="$DIR/theme/.sunset_state"
+if [[ ! -f "$STATE_FILE" ]]; then
+    echo "day" > "$STATE_FILE"
+fi
+
+# Apply theme accordingly
+apply_mode() {
+	if [[ `cat "$STATE_FILE"` = "day" ]]; then
+		hyprctl hyprsunset temperature 5000
+		echo "night" > "$STATE_FILE"
+	else
+		hyprctl hyprsunset identity
+		echo "day" > "$STATE_FILE"
+	fi
+}
+
+# Info
+show_info() {
+	if [[ `cat "$STATE_FILE"` = "day" ]]; then
+		echo -e "󰌶\nday\noff"
+	else
+		echo -e "󱠂\nnight\non"
+	fi
+}
+
+# Main
+if [[ "$1" == '--toggle' ]]; then
+	apply_mode
+else
+	show_info
+fi

@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+## Copyright (C) 2020-2026 Aditya Shakya <adi1090x@gmail.com>
+##
+## Mako -----------------------------------------------------
+
+CONFIG="$HOME/.config/hypr/mako/config"
+
+if [[ ! `pidof mako` ]]; then
+	mako --config ${CONFIG}
+fi
