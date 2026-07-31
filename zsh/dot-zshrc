@@ -182,10 +182,19 @@ if [[ $SYS_ARCH == linux* ]]; then
 else
   alias ls='ls -G' ll='ls -lahG'
 fi
-(( $+commands[eza] )) && alias ls='eza --icons --group-directories-first' \
-                               ll='eza -l --icons --git --group-directories-first' \
-                               la='eza -la --icons --git --group-directories-first' \
-                               lt='eza --tree --level=2 --icons'
+
+if (( $+commands[eza] )); then
+  # local _tree_excl='--git-ignore --ignore-glob=.git\|node_modules\|.cache\|target\|dist'
+  local _tree_excl='--git-ignore'
+  alias ls='eza --icons --group-directories-first'
+  alias ll='eza -l --icons --git --group-directories-first'
+  alias la='eza -la --icons --git --group-directories-first'
+  alias lt="eza --tree --icons --level=2 $_tree_excl"
+  alias lat="eza -a --tree --icons --level=2 $_tree_excl"
+  alias ltt="eza --tree --icons --level=3 $_tree_excl"
+  alias latt="eza -a --tree --icons --level=3 $_tree_excl"
+  unset _tree_excl
+fi
 
 (( $+commands[bat]  )) && alias cat='bat --paging=never'
 (( $+commands[rg]   )) && alias grep='rg'
