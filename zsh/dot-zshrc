@@ -23,6 +23,7 @@ fi
 typeset -U path PATH
 path+=(
   "$HOME/.local/bin"
+  "$HOME/.local/share/fnm"
   /usr/local/go/bin
   "$HOME/go/bin"
 )
@@ -229,26 +230,17 @@ fi
 
 (( $+commands[fzf] ))        && evalcache fzf        fzf --zsh
 (( $+commands[oh-my-posh] )) && evalcache oh-my-posh oh-my-posh init zsh --config "$HOME/.config/ohmyposh/custom-atomicBit.toml"
-(( $+commands[zoxide] ))     && evalcache zoxide     zoxide init zsh --cmd cd
+(( $+commands[zoxide] ))     && evalcache zoxide     zoxide init zsh --cmd cd # --cmd cd replaces `alias cd=z` + gives `cdi` (interactive)
 (( $+commands[uv] ))         && evalcache uv         uv  generate-shell-completion zsh
 (( $+commands[uvx] ))        && evalcache uvx        uvx --generate-shell-completion zsh
-# zoxide --cmd cd replaces `alias cd=z` and also gives you `cdi` (interactive)
 
-### ── NVM, lazy-loaded ──────────────────────────────────
-# Eager nvm costs 300-800ms per shell. Shims load it on first use only.
-# Better long-term: switch to fnm/mise →  eval "$(fnm env --use-on-cd)"
-export NVM_DIR="$HOME/.nvm"
-if [[ -s "$NVM_DIR/nvm.sh" ]]; then
-  __lazy_nvm() {
-    unset -f nvm node npm npx corepack 2>/dev/null
-    source "$NVM_DIR/nvm.sh"
-    [[ -s "$NVM_DIR/bash_completion" ]] && source "$NVM_DIR/bash_completion"
-  }
-  nvm()      { __lazy_nvm; nvm      "$@" }
-  node()     { __lazy_nvm; node     "$@" }
-  npm()      { __lazy_nvm; npm      "$@" }
-  npx()      { __lazy_nvm; npx      "$@" }
-  corepack() { __lazy_nvm; corepack "$@" }
+### ── fnm (Node version manager) ───────────────────────
+if (( $+commands[fnm] )); then
+  # explicit --shell skips process-tree detection (faster per fnm docs);
+  # recursive = find .nvmrc/.node-version in parent dirs (monorepos);
+  # quiet = no "Using Node vX" banner on every cd
+  evalcache fnm fnm env --use-on-cd --shell zsh --version-file-strategy=recursive --log-level=quiet
+  evalcache fnm-completions fnm completions --shell zsh
 fi
 
 ### ── bun completions ───────────────────────────────────

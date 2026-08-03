@@ -25,7 +25,7 @@ sudo pacman -S stow openssh neovim zellij curl wget unzip zip tar zsh
 ### 3. Essential packages
 
 ```bash
-sudo pacman -S zoxide fzf eza ripgrep bat fd btop
+sudo pacman -S zoxide fzf eza ripgrep bat fd btop superfile
 ```
 
 ### 4. Hyprland requirements
@@ -75,4 +75,53 @@ From the repo root (`~/.dotfiles`):
 ```bash
 stow -t ~/.config config
 stow --dotfiles ssh zsh
+```
+
+## Dev packages
+
+### Essential
+
+```bash
+sudo pacman -S git neovim lazygit
+```
+
+### Docker
+
+```bash
+sudo pacman -S docker docker-compose docker-buildx
+```
+
+Enable Docker and add your user to the `docker` group:
+
+```bash
+sudo systemctl enable --now docker.service
+sudo usermod -aG docker $USER
+```
+
+> **Note:** log out and back in (or reboot) for the group change to take effect.
+
+### uv (Python package manager)
+
+Installs `uv` and `uvx`:
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+### Node.js (via fnm)
+
+```bash
+curl -fsSL https://fnm.vercel.app/install | bash
+```
+
+Then install the latest LTS Node.js:
+
+```bash
+fnm install --lts
+```
+
+### Bun
+
+```bash
+curl -fsSL https://bun.com/install | bash
 ```
