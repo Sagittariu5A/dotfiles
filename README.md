@@ -46,19 +46,39 @@ Enable the polkit agent:
 systemctl --user enable --now hyprpolkitagent.service
 ```
 
-yay:
+#### Display manager (ly)
 
 ```bash
-yay -S light
+sudo pacman -S ly
+sudo systemctl enable ly@tty2
+sudo systemctl disable getty@tty1
 ```
+
+> **Note:** ly runs on tty2; disabling `getty@tty1` removes the tty1 console so the machine boots straight into ly on tty2.
 
 ### 5. Fonts
 
-JetBrainsMono Nerd Font:
+pacman:
 
 ```bash
-sudo pacman -S ttf-jetbrains-mono-nerd
+sudo pacman -S ttf-jetbrains-mono-nerd ttf-jetbrains-mono ttf-iosevka-nerd \
+  ttf-roboto-mono-nerd ttf-space-mono-nerd ttf-nerd-fonts-symbols \
+  noto-fonts noto-fonts-cjk noto-fonts-emoji
 ```
+
+yay (feather icon font, used by rofi menus):
+
+```bash
+yay -S ttf-icomoon-feather
+```
+
+Used by:
+
+- **wofi / rofi / waybar / mako / wlogout**: JetBrainsMono Nerd Font, JetBrains Mono, Iosevka Nerd Font, Symbols Nerd Font
+- **rofi menus** (powermenu, confirm, music, screenshot, asroot): feather icon font
+- **hyprlock**: Iosevka Nerd Font, RobotoMono Nerd Font, SpaceMono Nerd Font, Symbols Nerd Font
+- **GTK apps**: Noto Sans
+- **CJK / emoji fallback**: Noto Sans/Serif CJK SC and Noto Color Emoji, configured via `config/fontconfig/fonts.conf` (deployed with the rest of `config` by stow; run `fc-cache -f` after changes)
 
 ### 6. Oh My Posh
 
@@ -74,7 +94,7 @@ From the repo root (`~/.dotfiles`):
 
 ```bash
 stow -t ~/.config config
-stow --dotfiles ssh zsh
+stow --dotfiles ssh zsh git
 ```
 
 ## Dev packages

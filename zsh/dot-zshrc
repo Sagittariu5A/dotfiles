@@ -92,26 +92,10 @@ ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
 HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
 
-### ── Keybindings (vi mode) ─────────────────────────────
-# bindkey -v
-# KEYTIMEOUT=10
-# bindkey -M viins 'jk' vi-cmd-mode
-# bindkey -M viins '^?' backward-delete-char
-# bindkey -M viins '^H' backward-delete-char
-
 zmodload zsh/terminfo    # exposes $terminfo (no-op if already loaded)
-
-# # Substring history search — terminfo keys, hardcoded fallback if entry missing
-# bindkey "${terminfo[kcuu1]:-^[[A}" history-substring-search-up
-# bindkey "${terminfo[kcud1]:-^[[B}" history-substring-search-down
 
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
-
-bindkey '^P'   history-substring-search-up
-bindkey '^N'   history-substring-search-down
-# bindkey -M vicmd 'k' history-substring-search-up
-# bindkey -M vicmd 'j' history-substring-search-down
 
 # Ctrl+Left/Right — jump to previous/next word
 # kLFT5/kRIT5 = Ctrl+arrow in terminfo; ^[[1;5D/^[[1;5C = what xterm/kitty/alacritty send
@@ -207,20 +191,6 @@ alias reload='exec zsh'
 alias path='print -l $path'
 alias d='dirs -v'
 
-### ── evalcache: cache `eval "$(tool init)"` output for 24h ──
-# Saves ~50-150ms/start. After upgrading a tool: rm -rf ~/.cache/zsh/evalcache
-evalcache() {
-  local name="$1"; shift
-  local dir="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/evalcache"
-  local cache="$dir/$name.zsh"
-  [[ -d $dir ]] || mkdir -p "$dir"
-  if [[ ! -s $cache || -n $cache(#qN.mh+24) ]]; then
-    # temp file first: a failing command must not clobber a good cache
-    "$@" >| "$cache.tmp" 2>/dev/null && mv "$cache.tmp" "$cache"
-  fi
-  [[ -s $cache ]] && source "$cache"
-}
-
 ### ── Shell integrations ────────────────────────────────
 export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border --info=inline'
 if (( $+commands[fd] )); then
@@ -228,19 +198,19 @@ if (( $+commands[fd] )); then
   export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 fi
 
-(( $+commands[fzf] ))        && evalcache fzf        fzf --zsh
-(( $+commands[oh-my-posh] )) && evalcache oh-my-posh oh-my-posh init zsh --config "$HOME/.config/ohmyposh/custom-atomicBit.toml"
-(( $+commands[zoxide] ))     && evalcache zoxide     zoxide init zsh --cmd cd # --cmd cd replaces `alias cd=z` + gives `cdi` (interactive)
-(( $+commands[uv] ))         && evalcache uv         uv  generate-shell-completion zsh
-(( $+commands[uvx] ))        && evalcache uvx        uvx --generate-shell-completion zsh
+(( $+commands[fzf] ))        && eval "$(fzf --zsh)"
+(( $+commands[oh-my-posh] )) && eval "$(oh-my-posh init zsh --config "$HOME/.config/ohmyposh/custom-atomicBit.toml")"
+(( $+commands[zoxide] ))     && eval "$(zoxide init zsh --cmd cd)" # --cmd cd replaces `alias cd=z` + gives `cdi` (interactive)
+(( $+commands[uv] ))         && eval "$(uv  generate-shell-completion zsh)"
+(( $+commands[uvx] ))        && eval "$(uvx --generate-shell-completion zsh)"
 
 ### ── fnm (Node version manager) ───────────────────────
 if (( $+commands[fnm] )); then
   # explicit --shell skips process-tree detection (faster per fnm docs);
   # recursive = find .nvmrc/.node-version in parent dirs (monorepos);
   # quiet = no "Using Node vX" banner on every cd
-  evalcache fnm fnm env --use-on-cd --shell zsh --version-file-strategy=recursive --log-level=quiet
-  evalcache fnm-completions fnm completions --shell zsh
+  eval "$(fnm env --use-on-cd --shell zsh --version-file-strategy=recursive --log-level=quiet)"
+  eval "$(fnm completions --shell zsh)"
 fi
 
 ### ── bun completions ───────────────────────────────────
@@ -251,3 +221,11 @@ fi
 
 # kimi-code
 export PATH="/home/jaw/.kimi-code/bin:$PATH"
+
+# pnpm
+export PNPM_HOME="/home/jaw/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME/bin:"*) ;;
+  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
+esac
+# pnpm end
